@@ -6,9 +6,10 @@ sidebar_label: LibreDB Studio
 import RelatedPages from "@site/src/components/RelatedPages";
 import ConsoleLabel from "@site/src/components/ConsoleIcons";
 
-Use [LibreDB Studio](https://libredb.org/) to connect to your Aiven for PostgreSQL®
-service from a browser. LibreDB Studio is an open source SQL client that you host
-yourself, so a team connects through one URL instead of installing a client on every
+Use [LibreDB Studio](https://libredb.org/) to query your Aiven for PostgreSQL® service.
+
+LibreDB Studio is an open source SQL client that you host yourself and reach from a
+browser, so a team connects through one URL instead of installing a client on every
 machine.
 
 ## Prerequisites
@@ -19,13 +20,19 @@ machine.
 
   ```bash
   docker run -p 3000:3000 -v libredb:/app/data \
-    -e STORAGE_PROVIDER=sqlite ghcr.io/libredb/libredb-studio:0.16.1
+    -e STORAGE_PROVIDER=sqlite ghcr.io/libredb/libredb-studio:0.16.2
   ```
 
   `STORAGE_PROVIDER=sqlite` keeps saved connections on the server instead of in the
   browser, and the volume keeps them when you replace the container. On the first run,
   LibreDB Studio prints the admin password to the container log, so read it with
   `docker logs` before you sign in.
+
+  If the browser reaches LibreDB Studio at anything other than `localhost` over plain
+  HTTP, for example at `http://192.168.1.10:3000` on a network, add
+  `-e AUTH_COOKIE_SECURE=false`. Without it the sign-in request succeeds but the
+  browser drops the session cookie, and the page returns to the sign-in form with no
+  error.
 
 ## Get the service URI from the Aiven Console
 
@@ -40,8 +47,8 @@ machine.
 
 1. Open LibreDB Studio, sign in, and create a connection.
 1. Click **Paste URL**, paste the service URI, and click **Parse**. LibreDB Studio
-   fills in the host, port, user, password, and database name, and sets **SSL** to
-   **`REQUIRE`** because the URI carries `sslmode=require`.
+   fills in the host, port, user, password, and database name, and sets **SSL Mode**
+   to `require` because the URI carries `sslmode=require`.
 1. Click **Test Connection** to verify the settings, and click **Establish Connection**
    to save the connection.
 
